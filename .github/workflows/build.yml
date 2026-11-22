@@ -36,6 +36,37 @@ jobs:
           key: sdk-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts', 'gradle/**', '.github/workflows/build.yml') }}
           restore-keys: sdk-${{ runner.os }}-
 
+      # Maven Central rate-limits GitHub's shared runners (HTTP 429): fetch through Google's
+      # public mirror of it. Same files, so the APK doesn't change.
+      - name: Fetch Maven Central through Google's mirror
+        run: |
+          mkdir -p ~/.gradle/init.d
+          cat > ~/.gradle/init.d/central-mirror.gradle <<'EOF'
+            def mirror = "https://maven-central.storage-download.googleapis.com/maven2/"
+            def redirect = { RepositoryHandler repos ->
+                repos.withType(MavenArtifactRepository).configureEach { repo ->
+                    if (repo.url.toString().startsWith("https://repo.maven.apache.org/maven2")) {
+                        repo.url = mirror
+                    }
+                }
+            }
+            def mirrorFirst = { RepositoryHandler repos ->
+                def m = repos.maven { name = "CentralMirror"; url = mirror }
+                repos.remove(m)
+                repos.addFirst(m)
+            }
+            beforeSettings { settings ->
+                mirrorFirst(settings.buildscript.repositories)
+            }
+            settingsEvaluated { settings ->
+                mirrorFirst(settings.pluginManagement.repositories)
+                redirect(settings.dependencyResolutionManagement.repositories)
+            }
+            allprojects {
+                mirrorFirst(buildscript.repositories)
+            }
+          EOF
+
       - name: Install the SDK with F-Droid's sdkmanager
         run: |
           sudo rm -rf /usr/local/lib/android
