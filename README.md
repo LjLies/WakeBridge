@@ -57,8 +57,14 @@ The design is recorded in [docs/redesign.md](docs/redesign.md).
 
 Standard Gradle build (`./gradlew assembleDebug`), Android 8.0 or newer.
 
-To build without Google's Android SDK license, use the SDK from
-[LuccoJ/Android-Development](https://github.com/LuccoJ/Android-Development):
+GitHub Actions (`.github/workflows/build.yml`) builds with Google's SDK platform and build-tools,
+installed by [F-Droid's sdkmanager](https://gitlab.com/fdroid/sdkmanager) as on F-Droid's build
+server, so F-Droid can reproduce the release APK byte for byte. It uploads the debug APK, and the
+release APK when the repository has the release key.
+
+To build without accepting Google's Android SDK license, use the open SDK from
+[LuccoJ/Android-Development](https://github.com/LuccoJ/Android-Development). The APKs work the
+same but aren't byte-identical to ones built with Google's SDK:
 
 ```bash
 setup-sdk.sh --api 37 --build-tools 36.0.0
@@ -66,9 +72,6 @@ setup-sdk.sh --api 37 --build-tools 36.0.0
 ```bash
 ANDROID_HOME=~/oss-android-sdk ./gradlew assembleDebug testDebugUnitTest
 ```
-
-GitHub Actions builds the same way (`.github/workflows/build.yml`): it deletes the runner's
-preinstalled Google SDK, assembles the open one and uploads the debug APK as a build artifact.
 
 The unit tests use Robolectric, which downloads Android framework jars from Maven Central. If
 Central rate-limits you, set `robolectricRepoUrl` in `~/.gradle/gradle.properties` to a mirror,

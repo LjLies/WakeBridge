@@ -235,19 +235,26 @@ fix-third-party-alarms: SET_ALARM prefers unused slots, DISMISS_ALARM marks them
   legend_mockups.py imports mode_mockups.py; each takes the output folder as its argument).
 
 ### Building
-- No Google SDK licence is accepted anywhere. setup-sdk.sh from LuccoJ/android-development
-  (private; branch claude/trusting-bell-usyza9) assembles an SDK from Robolectric's android-all
+- Local builds need no Google SDK licence: setup-sdk.sh from LuccoJ/android-development
+  (now on main) assembles an SDK from Robolectric's android-all
   (Apache-2.0, stubbed to the public API), the JDK's java.* classes and Debian/Ubuntu build
   tools: `setup-sdk.sh --sdk DIR --api 37 --build-tools 36.0.0`, then
   `ANDROID_HOME=DIR ./gradlew assembleDebug testDebugUnitTest lintDebug`. AGP prints "License
   for package Android SDK Platform-Tools not accepted": it offered a download, nothing was
   accepted or fetched.
-- GitHub Actions (.github/workflows/build.yml) does the same on ubuntu-24.04 after deleting the
-  runner's preinstalled Google SDK, and uploads the APK. It works since LuccoJ/android-development
-  was made public (11 November). Actions' Node 20 deprecation warnings are harmless for now.
+- GitHub Actions (.github/workflows/build.yml) used the same open SDK until 22 November 2026.
+  Since then it builds with Google's platform and build-tools, installed by F-Droid's sdkmanager,
+  with JDK 21, for F-Droid reproducible builds: the open SDK's android.jar (about 42,000 classes,
+  hidden ones and hidden superclasses included, vs Google's 6,400) makes D8 and R8 output differ,
+  even with -dontobfuscate. Signing a Google-SDK build with AGP and copying the signature onto an
+  unsigned rebuild with apksigcopier verified fine. Builds are byte-identical across checkout
+  paths. Actions' Node 20 deprecation warnings are harmless for now.
 - Signing: the debug key that signed every APK so far is kept by the owner; stored base64 as the
-  repository secret DEBUG_KEYSTORE, CI builds install over local ones. Never commit it; publishing
-  would need a real release key.
+  repository secret DEBUG_KEYSTORE, CI builds install over local ones. Never commit it. Release
+  builds are signed with the owner's release key (secrets RELEASE_KEYSTORE and
+  RELEASE_STORE_PASSWORD; setup in LuccoJ/Android-Development, docs/release-signing.md).
+- Release builds are shrunk with R8 but not renamed (-dontobfuscate, line numbers kept), so crash
+  traces are readable.
 - ScreenshotTest renders the panes with `-Pscreenshots=DIR` (Robolectric native graphics),
   for checking layouts without a phone.
 
