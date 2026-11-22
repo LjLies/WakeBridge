@@ -1,9 +1,12 @@
 package io.github.ljlies.wakebridge
 
 import android.Manifest
+import android.app.ActivityManager
+import android.app.ApplicationExitInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -29,6 +32,26 @@ class MainActivity : AppCompatActivity() {
             nav.selectedItemId = tabFor(intent)
         }
         askForNotifications()
+        if (savedInstanceState == null) {
+            noticeForceStop()
+            // A force stop cancels all of the app's timers: opening the app puts them back
+            Scheduler.restore(this)
+        }
+    }
+
+    /** Says so when Android (or the user) force-stopped the app since it last ran. */
+    private fun noticeForceStop() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return
+        val prefs = getSharedPreferences("exits", MODE_PRIVATE)
+        val seen = prefs.getLong("seen", 0)
+        val exits = getSystemService(ActivityManager::class.java).getHistoricalProcessExitReasons(packageName, 0, 5)
+        val stopped = exits.filter { it.timestamp > seen && it.reason == ApplicationExitInfo.REASON_USER_REQUESTED }
+        exits.maxOfOrNull { it.timestamp }?.let { prefs.edit().putLong("seen", maxOf(seen, it)).apply() }
+        // The first time, there's no telling which exits are new
+        if (seen == 0L || stopped.isEmpty()) return
+        val at = java.time.Instant.ofEpochMilli(stopped.maxOf { it.timestamp })
+        EventLog.add(this, getString(R.string.log_force_stopped, Format.dateTime(this, at)))
+        Toast.makeText(this, R.string.toast_force_stopped, Toast.LENGTH_LONG).show()
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
@@ -59,7 +82,8 @@ class MainActivity : AppCompatActivity() {
     /** The phone backup alarm rings through a notification (Android 13+ asks first). */
     private fun askForNotifications() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
-        if (!Settings(this).phoneBackup) return
+        val settings = Settings(this)
+        if (!settings.phoneBackup && !settings.phoneOnly) return
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
         ) return

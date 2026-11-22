@@ -79,6 +79,9 @@
 
     <!-- Event log -->
     <string name="log_started">Started: %s</string>
+    <string name="log_night_caught_up">The night started while the phone was off or the app stopped: armed now</string>
+    <string name="log_force_stopped">The app was force-stopped (%s): Gadgetbridge\'s events and the app\'s timers were lost until now</string>
+    <string name="toast_force_stopped">WakeBridge was force-stopped, so it missed events until now. To avoid it, allow it to run in the background in the phone\'s battery settings.</string>
     <string name="log_phone_only_setting">Set to ring only on the phone</string>
     <string name="log_simulated">Simulating a Gadgetbridge event from Setup and info</string>
     <string name="log_phone_only">The watch isn\'t connected: only the phone will ring</string>
@@ -155,7 +158,7 @@
     <string name="setup_step4_title">4. Check</string>
     <string name="setup_step4_body">Send a test alarm for about 2 minutes from now: it should appear in Gadgetbridge\'s alarm list and go off on the watch. If it doesn\'t, check step 2 and the watch address. Remove it afterwards to free the slot.\n\nThe next time you fall asleep with the watch on, the times below should change. To try WakeBridge without sleeping, simulate the two events with the buttons above.</string>
     <string name="setup_step5_title">5. Phone</string>
-    <string name="setup_step5_body">For the phone backup alarm, and to see whether the watch is connected, the phone has to allow:</string>
+    <string name="setup_step5_body">For the phone alarm, to see whether the watch is connected, and to keep listening to Gadgetbridge with the app closed, the phone has to allow:</string>
     <string name="permission_notifications">Notifications</string>
     <string name="permission_exact_alarms">Alarms and reminders</string>
     <string name="permission_full_screen">Full-screen alarms</string>

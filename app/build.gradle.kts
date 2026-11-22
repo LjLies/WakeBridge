@@ -22,8 +22,8 @@ android {
         applicationId = "io.github.ljlies.wakebridge"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "0.5.1"
+        versionCode = 9
+        versionName = "0.5.2"
     }
 
     // Only the app's own languages, so library texts match the rest of the app

@@ -9,7 +9,7 @@ object EventLog {
     private const val KEY = "entries"
 
     fun add(context: Context, message: String) {
-        val prefs = context.getSharedPreferences("event_log", Context.MODE_PRIVATE)
+        val prefs = prefs(context)
         val entries = load(context).toMutableList()
         entries.add(0, "${Session.now().toEpochMilli()}\t$message")
         prefs.edit().putString(KEY, entries.take(MAX_ENTRIES).joinToString("\n")).apply()
@@ -17,8 +17,7 @@ object EventLog {
 
     /** Newest first, as "timestamp\tmessage". */
     private fun load(context: Context): List<String> =
-        context.getSharedPreferences("event_log", Context.MODE_PRIVATE)
-            .getString(KEY, null)?.split("\n")?.filter { it.isNotEmpty() } ?: emptyList()
+        prefs(context).getString(KEY, null)?.split("\n")?.filter { it.isNotEmpty() } ?: emptyList()
 
     fun format(context: Context): String =
         load(context).joinToString("\n") { line ->
@@ -27,6 +26,9 @@ object EventLog {
         }
 
     fun clear(context: Context) {
-        context.getSharedPreferences("event_log", Context.MODE_PRIVATE).edit().clear().apply()
+        prefs(context).edit().clear().apply()
     }
+
+    // Device-protected, so the phone alarm can log while the phone is still locked after a restart
+    private fun prefs(context: Context) = Storage.deviceProtected(context, "event_log")
 }

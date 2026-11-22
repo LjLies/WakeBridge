@@ -47,6 +47,7 @@
 
         <activity
             android:name=".RingActivity"
+            android:directBootAware="true"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
@@ -83,14 +84,27 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
 
+        <!-- These two work before the phone is unlocked after a restart, so the phone alarm
+             still rings; they only use device-protected storage -->
+        <receiver
+            android:name=".Scheduler$LockedBootReceiver"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".PhoneAlarm$Receiver"
+            android:directBootAware="true"
             android:exported="false" />
     </application>
 </manifest>

@@ -77,6 +77,9 @@
 
     <!-- Event log -->
     <string name="log_started">Avviata: %s</string>
+    <string name="log_night_caught_up">La notte è iniziata a telefono spento o con l\'app fermata: attivata ora</string>
+    <string name="log_force_stopped">L\'app è stata arrestata forzatamente (%s): fino a ora ha perso gli eventi di Gadgetbridge e i suoi timer</string>
+    <string name="toast_force_stopped">WakeBridge è stata arrestata forzatamente, quindi fino a ora ha perso gli eventi. Per evitarlo, consentile di funzionare in background nelle impostazioni della batteria del telefono.</string>
     <string name="log_phone_only_setting">Impostato per suonare solo sul telefono</string>
     <string name="log_simulated">Simulazione di un evento di Gadgetbridge da Configurazione e informazioni</string>
     <string name="log_phone_only">L\'orologio non è connesso: suonerà solo il telefono</string>
@@ -149,7 +152,7 @@
     <string name="setup_step4_title">4. Verifica</string>
     <string name="setup_step4_body">Invia una sveglia di prova per circa 2 minuti da ora: dovrebbe comparire nell\'elenco delle sveglie di Gadgetbridge e suonare sull\'orologio. Se non succede, controlla il punto 2 e l\'indirizzo dell\'orologio. Poi rimuovila, per liberare lo spazio.\n\nLa prossima volta che ti addormenti con l\'orologio al polso, gli orari qui sotto dovrebbero cambiare. Per provare WakeBridge senza dormire, simula i due eventi con i pulsanti qui sopra.</string>
     <string name="setup_step5_title">5. Telefono</string>
-    <string name="setup_step5_body">Per la sveglia di riserva sul telefono, e per sapere se l\'orologio è connesso, il telefono deve consentire:</string>
+    <string name="setup_step5_body">Per la sveglia sul telefono, per sapere se l\'orologio è connesso e per continuare ad ascoltare Gadgetbridge ad app chiusa, il telefono deve consentire:</string>
     <string name="permission_notifications">Notifiche</string>
     <string name="permission_exact_alarms">Sveglie e promemoria</string>
     <string name="permission_full_screen">Sveglie a schermo intero</string>

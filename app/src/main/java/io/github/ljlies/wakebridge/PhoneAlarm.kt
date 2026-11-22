@@ -23,7 +23,8 @@ object PhoneAlarm {
     const val NOTIFICATION_ID = 1
     val SNOOZE: Duration = Duration.ofMinutes(5)
 
-    private fun prefs(context: Context) = context.getSharedPreferences("phone_alarm", Context.MODE_PRIVATE)
+    // Device-protected, so the alarm can be set again and ring after a restart, before unlocking
+    private fun prefs(context: Context) = Storage.deviceProtected(context, "phone_alarm")
 
     fun pendingAt(context: Context): Instant? =
         prefs(context).getLong("at", 0).takeIf { it > 0 }?.let(Instant::ofEpochMilli)

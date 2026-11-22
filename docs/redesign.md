@@ -224,6 +224,25 @@ fix-third-party-alarms: SET_ALARM prefers unused slots, DISMISS_ALARM marks them
   way.
 - CI uploads the APK unzipped (upload-artifact v7, `archive: false`) as WakeBridge-VERSION-debug.apk.
 
+## Round 7: keep working after a restart or a stop (built in 0.5.2)
+- Gadgetbridge's events arrive through a manifest receiver, so they reach the app whether or not
+  it is running, also after a restart. What a restart or a force stop does wipe is the app's
+  AlarmManager timers; Android also keeps a force-stopped app from receiving anything until it is
+  opened again (by design: no app can get around it).
+- After a restart, everything is set again at unlock (BOOT_COMPLETED, also QUICKBOOT_POWERON).
+  Before unlock only device-protected storage is readable, so the phone alarm's time and the
+  event log moved there (Storage.deviceProtected, moving the old files once); the phone alarm's
+  receiver and RingActivity are direct-boot aware, and LOCKED_BOOT_COMPLETED sets the phone alarm
+  again, so it rings even if the phone restarted at night and stays locked.
+- Opening the app puts every timer back (Scheduler.restore), so a force stop is undone the next
+  time the app is opened; the app then says it was force-stopped (ApplicationExitInfo
+  REASON_USER_REQUESTED, Android 11+), in a toast and in the log.
+- A night whose start passed while the phone was off or the app stopped is armed when the app
+  comes back (restore), unless it was already handled; skipping tonight counts as handled.
+- Timers are now exact where allowed (inexact ones can be put off, or limited to a few a day for
+  apps Android sees as rarely used). "Unrestricted battery use" is no longer marked optional in
+  Setup and info. Notifications are also asked for when only the phone rings.
+
 ## Status and how to continue (end of 9 November 2026)
 - The mode control stays a toggle (Manual / Automatic); the switch mockup (ModeSwitch) was not
   chosen.

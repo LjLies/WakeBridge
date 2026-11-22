@@ -150,7 +150,7 @@ class SetupActivity : AppCompatActivity() {
             }
         }
         val power = getSystemService(PowerManager::class.java)
-        row(R.string.permission_battery, power.isIgnoringBatteryOptimizations(packageName), optional = true) {
+        row(R.string.permission_battery, power.isIgnoringBatteryOptimizations(packageName)) {
             startActivity(Intent(AndroidSettings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")))
         }
     }

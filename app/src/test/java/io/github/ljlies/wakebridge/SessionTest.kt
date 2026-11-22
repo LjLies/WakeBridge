@@ -448,6 +448,51 @@ class SessionTest {
         assertNull(PhoneAlarm.pendingAt(app))
     }
 
+    @Test
+    fun phoneOnlySendsNothingToTheWatch() {
+        setting(Settings.KEY_PHONE_ONLY, true)
+        nap(20, WakeMode.FIXED)
+        assertEquals(emptyList<String>(), commands())
+        assertEquals(Instant.parse("2026-11-09T14:20:00Z"), PhoneAlarm.pendingAt(app))
+    }
+
+    // Restarts and force stops
+
+    @Test
+    fun aMissedNightStartIsCaughtUp() {
+        everyNight()
+        Scheduler.restore(app) // the first run only starts keeping track
+        at("2026-11-09T20:00:00")
+        Scheduler.restore(app)
+        assertNull("not night yet", Session.current(app))
+        at("2026-11-09T22:30:00") // the phone was off at 21:00
+        Scheduler.restore(app)
+        assertEquals(Session.Kind.NIGHT, Session.current(app)?.kind)
+        assertEquals(listOf("SET 08:00"), commands())
+    }
+
+    @Test
+    fun aSkippedNightIsNotCaughtUp() {
+        everyNight()
+        Scheduler.restore(app)
+        at("2026-11-09T21:00:00")
+        Scheduler.armNight(app)
+        Session.cancel(app, "skip tonight")
+        commands()
+        at("2026-11-09T23:00:00")
+        Scheduler.restore(app)
+        assertNull(Session.current(app))
+        assertEquals(emptyList<String>(), commands())
+    }
+
+    @Test
+    fun thePhoneAlarmSurvivesInDeviceProtectedStorage() {
+        setting(Settings.KEY_PHONE_ONLY, true)
+        nap(20, WakeMode.FIXED)
+        val protected = app.createDeviceProtectedStorageContext()
+        assertNotNull(PhoneAlarm.pendingAt(protected))
+    }
+
     // Time helpers
 
     @Test
