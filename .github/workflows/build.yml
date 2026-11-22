@@ -119,7 +119,7 @@ jobs:
 
       - name: Show the release signing certificate
         if: env.RELEASE_APK != ''
-        run: keytool -printcert -jarfile "$RELEASE_APK"
+        run: '"$ANDROID_HOME"/build-tools/36.0.0/apksigner verify --print-certs "$RELEASE_APK"'
 
       - name: Upload signed release APK
         if: env.RELEASE_APK != ''
