@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.animation.ValueAnimator
 import android.content.Context

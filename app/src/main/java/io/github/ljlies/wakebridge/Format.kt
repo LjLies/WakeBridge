@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.content.Context
 import android.text.format.DateFormat

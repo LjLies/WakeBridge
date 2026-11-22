@@ -235,7 +235,7 @@ fix-third-party-alarms: SET_ALARM prefers unused slots, DISMISS_ALARM marks them
   legend_mockups.py imports mode_mockups.py; each takes the output folder as its argument).
 
 ### Building
-- Local builds need no Google SDK licence: setup-sdk.sh from LuccoJ/android-development
+- Local builds need no Google SDK licence: setup-sdk.sh from LjLies/android-development
   (now on main) assembles an SDK from Robolectric's android-all
   (Apache-2.0, stubbed to the public API), the JDK's java.* classes and Debian/Ubuntu build
   tools: `setup-sdk.sh --sdk DIR --api 37 --build-tools 36.0.0`, then
@@ -252,20 +252,24 @@ fix-third-party-alarms: SET_ALARM prefers unused slots, DISMISS_ALARM marks them
 - Signing: the debug key that signed every APK so far is kept by the owner; stored base64 as the
   repository secret DEBUG_KEYSTORE, CI builds install over local ones. Never commit it. Release
   builds are signed with the owner's release key (secrets RELEASE_KEYSTORE and
-  RELEASE_STORE_PASSWORD; setup in LuccoJ/Android-Development, docs/release-signing.md).
+  RELEASE_STORE_PASSWORD; setup in LjLies/Android-Development, docs/release-signing.md).
 - Release builds are shrunk with R8 but not renamed (-dontobfuscate, line numbers kept), so crash
   traces are readable.
+- 22 November 2026: the owner's GitHub account was renamed from LuccoJ to LjLies (an empty LuccoJ
+  organization holds the old name, so old URLs keep redirecting), and the package became
+  io.github.ljlies.wakebridge. Android treats it as a new app: install it beside or instead of
+  the old one, and point Gadgetbridge's broadcast package at the new name.
 - ScreenshotTest renders the panes with `-Pscreenshots=DIR` (Robolectric native graphics),
   for checking layouts without a phone.
 
 ### Gadgetbridge
 - WakeBridge needs, per watch: Device actions On Fall Asleep / On Wake Up → Send Broadcast to
-  package io.github.luccoj.wakebridge, and Developer settings > Intent API > Allow 3rd party apps
+  package io.github.ljlies.wakebridge, and Developer settings > Intent API > Allow 3rd party apps
   to set alarms.
 - Stock Gadgetbridge puts a third-party alarm in the first alarm that is off and untitled (it can
   be one of the user's own: naming them protects them) and, on Huami watches, may send it
   disabled because the slot is still marked unused.
-- The owner's fork (github.com/LuccoJ/Gadgetbridge, branch fix-third-party-alarms, synced with
+- The owner's fork (github.com/LjLies/Gadgetbridge, branch fix-third-party-alarms, synced with
   upstream) fixes both: SET_ALARM clears "unused" when enabling and prefers unused slots;
   DISMISS_ALARM marks the slot unused again. Not yet built or tested; no upstream request for now.
   Commits there carry an "AI-assisted" note, per Gadgetbridge's policy.

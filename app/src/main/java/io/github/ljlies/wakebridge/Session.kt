@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.content.ComponentName
 import android.content.Context

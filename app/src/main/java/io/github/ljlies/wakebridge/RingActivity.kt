@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.app.NotificationManager
 import android.media.AudioAttributes

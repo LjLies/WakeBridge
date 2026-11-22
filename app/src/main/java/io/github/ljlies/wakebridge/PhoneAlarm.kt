@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -18,7 +18,7 @@ import java.time.Instant
  * only alarm and rings at the alarm time itself.
  */
 object PhoneAlarm {
-    private const val ACTION_RING = "io.github.luccoj.wakebridge.RING"
+    private const val ACTION_RING = "io.github.ljlies.wakebridge.RING"
     const val CHANNEL = "alarm"
     const val NOTIFICATION_ID = 1
     val SNOOZE: Duration = Duration.ofMinutes(5)
