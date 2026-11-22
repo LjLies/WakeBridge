@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -15,8 +15,8 @@ import java.time.LocalTime
  * are used.
  */
 object Scheduler {
-    private const val ACTION_CHECK = "io.github.luccoj.wakebridge.CHECK"
-    private const val ACTION_NIGHT = "io.github.luccoj.wakebridge.NIGHT"
+    private const val ACTION_CHECK = "io.github.ljlies.wakebridge.CHECK"
+    private const val ACTION_NIGHT = "io.github.ljlies.wakebridge.NIGHT"
 
     /** Schedules the next moment something is due for the session: alarm time, deadline or cleanup. */
     fun scheduleSession(context: Context, state: Session.State?) {

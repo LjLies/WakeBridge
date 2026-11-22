@@ -232,7 +232,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
-                <io.github.luccoj.wakebridge.RoundButton
+                <io.github.ljlies.wakebridge.RoundButton
                     android:id="@+id/round_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -240,13 +240,13 @@
             </FrameLayout>
         </LinearLayout>
 
-        <io.github.luccoj.wakebridge.TimelineLegendView
+        <io.github.ljlies.wakebridge.TimelineLegendView
             android:id="@+id/legend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <io.github.luccoj.wakebridge.TimelineView
+        <io.github.ljlies.wakebridge.TimelineView
             android:id="@+id/timeline"
             android:layout_width="@dimen/timeline_width"
             android:layout_height="match_parent"

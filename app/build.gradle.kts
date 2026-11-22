@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
 }
 
-// Release signing (guide: LuccoJ/Android-Development). The keystore and its password never go
+// Release signing (guide: LjLies/Android-Development). The keystore and its password never go
 // in the repository: Gradle takes them from ~/.gradle/gradle.properties (releaseStoreFile,
 // releaseStorePassword, optional releaseKeyAlias) or, on CI, from environment variables
 // (RELEASE_STORE_FILE, RELEASE_STORE_PASSWORD, RELEASE_KEY_ALIAS). Without them, release builds
@@ -15,11 +15,11 @@ val releaseStoreFile = signingSetting("releaseStoreFile", "RELEASE_STORE_FILE")
     ?.let { if (it.startsWith("~/")) System.getProperty("user.home") + it.substring(1) else it }
 
 android {
-    namespace = "io.github.luccoj.wakebridge"
+    namespace = "io.github.ljlies.wakebridge"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "io.github.luccoj.wakebridge"
+        applicationId = "io.github.ljlies.wakebridge"
         minSdk = 26
         targetSdk = 35
         versionCode = 8

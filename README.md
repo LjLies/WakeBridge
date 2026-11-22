@@ -63,7 +63,7 @@ server, so F-Droid can reproduce the release APK byte for byte. It uploads the d
 release APK when the repository has the release key.
 
 To build without accepting Google's Android SDK license, use the open SDK from
-[LuccoJ/Android-Development](https://github.com/LuccoJ/Android-Development). The APKs work the
+[LjLies/Android-Development](https://github.com/LjLies/Android-Development). The APKs work the
 same but aren't byte-identical to ones built with Google's SDK:
 
 ```bash

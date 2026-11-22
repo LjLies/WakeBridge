@@ -1,4 +1,4 @@
-package io.github.luccoj.wakebridge
+package io.github.ljlies.wakebridge
 
 import android.app.TimePickerDialog
 import android.bluetooth.BluetoothDevice
