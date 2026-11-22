@@ -65,8 +65,22 @@ jobs:
           mkdir -p ~/.android
           echo "$DEBUG_KEYSTORE" | base64 -d > ~/.android/debug.keystore
 
+      # Optional: sign release builds with the release key. Store the keystore base64-encoded as
+      # the repository secret RELEASE_KEYSTORE and its password as RELEASE_STORE_PASSWORD
+      # (guide: LuccoJ/Android-Development). Without them the release APK is unsigned and not
+      # uploaded.
+      - name: Release signing key
+        env:
+          RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+        if: env.RELEASE_KEYSTORE != ''
+        run: |
+          echo "$RELEASE_KEYSTORE" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "RELEASE_STORE_FILE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+
       - name: Build, test and lint
-        run: ./gradlew --no-daemon assembleDebug testDebugUnitTest lintDebug -ProbolectricRepoUrl="$MAVEN_MIRROR"
+        env:
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+        run: ./gradlew --no-daemon assembleDebug assembleRelease testDebugUnitTest lintDebug -ProbolectricRepoUrl="$MAVEN_MIRROR"
 
       # Uploaded unzipped, so it downloads as an .apk; the file's name becomes the artifact's
       - name: Name the APK after the version
@@ -74,12 +88,27 @@ jobs:
           version=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)
           cp app/build/outputs/apk/debug/app-debug.apk "WakeBridge-$version-debug.apk"
           echo "APK=WakeBridge-$version-debug.apk" >> "$GITHUB_ENV"
+          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
+            cp app/build/outputs/apk/release/app-release.apk "WakeBridge-$version.apk"
+            echo "RELEASE_APK=WakeBridge-$version.apk" >> "$GITHUB_ENV"
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           path: ${{ env.APK }}
           archive: false
+
+      - name: Upload signed release APK
+        if: env.RELEASE_APK != ''
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.RELEASE_APK }}
+          archive: false
+
+      - name: Remove the release key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release.jks"
 
       - name: Upload reports
         if: always()
