@@ -52,6 +52,12 @@ android {
         }
     }
 
+    // F-Droid: no Google-encrypted dependency metadata blob in the APK signing block.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
